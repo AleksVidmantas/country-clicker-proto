@@ -19,6 +19,7 @@ run `node -v` and `npm -v ` to verify installation
 ### Setting up
 Clone and run `npm install` in the folder with `package.json`
 
+To test, access `ip:3000/test` to test the sample `GET` method.
  `sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'aem6443'" -d country_game` - In order to access in querries.js. 
  ### References
  1. https://blog.logrocket.com/setting-up-a-restful-api-with-node-js-and-postgresql-d96d6fc892d8/
