@@ -1,21 +1,23 @@
 # country-clicker-proto 
 ## TODO reformat bulk code into a file 
 ### This readme will eventually contain the full list of steps to start developing locally.
-Required apt packages 
+Installing required packages 
 
 1. Node - `sudo apt-get install curl`<br />`curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -`<br />`sudo apt-get install nodejs`<br />
 run `node -v` and `npm -v ` to verify installation
 2. postgres - `sudo apt update` and<br />
 `sudo apt install postgresql postgresql-contrib`
+
+### Setting up
+1. Clone this repo
+2. Run `npm install` in the folder with `package.json`
 3. `sudo -u postgres psql -f schema.sql` to setup the tables.
 4. `sudo -u postres psql -f seed.sql` to fill with initial values
-        
-        
-### Setting up
-Clone and run `npm install` in the folder with `package.json`
-
-To test, access `ip:3000/test` to test the sample `GET` method.
- `sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'aem6443'" -d country_game` - In order to access in querries.js. 
+5. `sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'aem6443'" -d country_game` - In order to access in querries.js. 
+6. `node server.js` in the folder with server.js to start the server
+6. To test, access `yourip:3000/test` to test the sample `GET` method. E.G `localhost:3000/test` if hosted locally.
+ 
+       
 
 ### POSTGRES cheat sheet
 1. `\l` list databases
