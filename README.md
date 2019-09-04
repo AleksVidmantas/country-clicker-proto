@@ -20,4 +20,6 @@ run `node -v` and `npm -v ` to verify installation
 `npm i express pg` installs express and postgres plugins
 
  `sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'aem6443'" -d country_game` - In order to access in querries.js. 
- 
+ ### References
+ 1. https://blog.logrocket.com/setting-up-a-restful-api-with-node-js-and-postgresql-d96d6fc892d8/
+ 2. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04
