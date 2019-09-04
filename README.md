@@ -17,7 +17,7 @@ run `node -v` and `npm -v ` to verify installation
         
         
 ### Setting up
-`npm i express pg` installs express and postgres plugins
+Clone and run `npm install` in the folder with `package.json`
 
  `sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'aem6443'" -d country_game` - In order to access in querries.js. 
  ### References
