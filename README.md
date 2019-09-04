@@ -19,6 +19,15 @@ Clone and run `npm install` in the folder with `package.json`
 
 To test, access `ip:3000/test` to test the sample `GET` method.
  `sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'aem6443'" -d country_game` - In order to access in querries.js. 
+ ### POSTGRES cheat sheet
+ 1. `\l` list databases
+ 2. `\c database` connect to database
+ 3. `\dt` lists all tables
+ 4. `d+ table` list table column information
+ 5. `sudo psql -U postgres` login as user postgres
  ### References
  1. https://blog.logrocket.com/setting-up-a-restful-api-with-node-js-and-postgresql-d96d6fc892d8/
  2. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04
+ 3. http://www.postgresqltutorial.com/postgresql-cheat-sheet/
+ 
+
