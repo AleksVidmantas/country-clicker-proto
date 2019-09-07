@@ -8,7 +8,7 @@ const pool = new Pool({
 });
 
 const insertUser = (username, encryptedPass, callback) => {
-    pool.query("INSERT INTO users (username, password) VALUES ($1, $2)",
+    pool.query("INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username",
         [username, encryptedPass], callback);
 }
 
