@@ -43,6 +43,8 @@ app.post('/users', (request, response) => {
 app.post('/users/auth', (request, response) => {
     db.getUser(request.body.username, (err, res) => {
         if (err) {
+            response.status(500).end();
+        } else if (!res.rows.length) {
             response.status(400).json({"err": "No user by that username."});
         } else {
             bcrypt.compare(request.body.password, res.rows[0].password, (err, res) => {
