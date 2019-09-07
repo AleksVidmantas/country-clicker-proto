@@ -7,17 +7,11 @@ const pool = new Pool({
     port: 5432,
 });
 
-const test = (request, response) => {
-    pool.query('SELECT * FROM faction;', (error, results) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(results.rows)
-    });
+const insertUser = (username, encryptedPass) => {
+    pool.query("INSERT INTO users (username, password) VALUES ($1, $2)",
+        [username, encryptedPass]);
 }
 
-
-
 module.exports = {
-    test
+    insertUser
 }
