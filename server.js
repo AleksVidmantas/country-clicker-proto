@@ -28,7 +28,11 @@ app.post('/users', (request, response) => {
         if (err) {
             response.status(500).end();
         }
-        db.insertUser(request.body.username, hash);
+        db.insertUser(request.body.username, hash, (err, res) => {
+            if (err && err.code == '23505') {
+                response.status(400).json({"err": "Username has already been taken"});
+            }
+        });
     });
 });
 

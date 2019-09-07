@@ -7,9 +7,9 @@ const pool = new Pool({
     port: 5432,
 });
 
-const insertUser = (username, encryptedPass) => {
+const insertUser = (username, encryptedPass, callback) => {
     pool.query("INSERT INTO users (username, password) VALUES ($1, $2)",
-        [username, encryptedPass]);
+        [username, encryptedPass], callback);
 }
 
 module.exports = {
