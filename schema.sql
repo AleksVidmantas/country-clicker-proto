@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS country_game;
 CREATE DATABASE country_game;
 \c country_game;
 
