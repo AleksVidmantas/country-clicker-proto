@@ -16,7 +16,9 @@ run `node -v` and `npm -v ` to verify installation
 6. `node server.js` in the folder with server.js to start the server
 6. To test, access `yourip:3000/test` to test the sample `GET` method. E.G `localhost:3000/test` if hosted locally.
  
-       
+### Configuration
+Configuration values are stored in the `config.js` file. An example file has been provided as `config.js.example`. As of right now there is only one
+configuration value, and that is `secretKey`, which is simply a key that is used to encrypt JWTs. You will need to set this value to run the application.
 
 ### POSTGRES cheat sheet
 1. `\l` list databases
