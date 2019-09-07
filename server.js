@@ -17,6 +17,13 @@ app.get('/', (request, response) => {
 });
 
 app.post('/users', (request, response) => {
+    if (!request.body.username) {
+        response.status(400).json({"err": "Missing username field."});
+    }
+    if (!request.body.password) {
+        response.status(400).json({"err": "Missing password field."});
+    }
+
     bcrypt.hash(request.body.password, 10, function(err, hash) {
         if (err) {
             response.status(500).end();
