@@ -1,11 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const app = express();
 const port = 3000;
-const db = require('./queries');
-const config = require('./config');
+
+const users = require('./endpoints/users');
 
 app.use(bodyParser.json()); //for reading requests
 app.use(
@@ -14,51 +12,28 @@ app.use(
     })
 );
 
-app.get('/', (request, response) => {
-    response.json({ info: 'Node.js, Express, and Postgres API' })
-});
+verbose = true;
 
-app.post('/users', (request, response) => {
-    if (!request.body.username) {
-        response.status(400).json({"err": "Missing username field."});
-    }
-    if (!request.body.password) {
-        response.status(400).json({"err": "Missing password field."});
-    }
 
-    bcrypt.hash(request.body.password, 10, function(err, hash) {
-        if (err) {
-            response.status(500).end();
+app.map = (a, route) => {
+    route = route || '';
+    for (var key in a) {
+        switch (typeof a[key]) {
+            // { '/path': { ... }}
+            case 'object':
+                app.map(a[key], route + key);
+                break;
+            // get: function(){ ... }
+            case 'function':
+                if (verbose) console.log('%s %s', key, route);
+                app[key](route, a[key]);
+                break;
         }
-        db.insertUser(request.body.username, hash, (err, res) => {
-            if (err && err.code == '23505') {
-                response.status(400).json({"err": "Username has already been taken"});
-            } else {
-                response.status(201).json(res.rows[0]);
-            }
-        });
-    });
-});
+    }
+};
 
-app.post('/users/auth', (request, response) => {
-    db.getUser(request.body.username, (err, res) => {
-        if (err) {
-            response.status(500).end();
-        } else if (!res.rows.length) {
-            response.status(400).json({"err": "No user by that username."});
-        } else {
-            bcrypt.compare(request.body.password, res.rows[0].password, (err, res) => {
-                if (res) {
-                    token = jwt.sign({
-                        "user": request.body.username
-                    }, config.secretKey, { expiresIn: '3h' });
-                    response.status(200).json({"token": token});
-                } else {
-                    response.status(400).json({"err": "Invalid password"});
-                }
-            });
-        }
-    });
+app.map({
+    '/users': users
 });
 
 app.listen(port, () => {
