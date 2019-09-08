@@ -25,6 +25,20 @@ create = (request, response) => {
     });
 };
 
+del = (request, response) => {
+    if (!request.user) {
+        response.status(400).json({"err": "Authorization required"});
+    }
+
+    db.deleteUser(request.user, (err, res) => {
+        if (err) {
+            response.status(500).end();
+        } else {
+            response.status(200).end();
+        }
+    });
+}
+
 auth = (request, response) => {
     db.getUser(request.body.username, (err, res) => {
         if (err) {
@@ -48,6 +62,7 @@ auth = (request, response) => {
 
 module.exports = {
     post: create,
+    delete: del,
     '/auth': {
         post: auth
     }
