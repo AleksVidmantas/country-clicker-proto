@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = 3000;
 const db = require('./queries');
+const config = require('./config');
 
 app.use(bodyParser.json()); //for reading requests
 app.use(
@@ -35,6 +37,27 @@ app.post('/users', (request, response) => {
                 response.status(201).json(res.rows[0]);
             }
         });
+    });
+});
+
+app.post('/users/auth', (request, response) => {
+    db.getUser(request.body.username, (err, res) => {
+        if (err) {
+            response.status(500).end();
+        } else if (!res.rows.length) {
+            response.status(400).json({"err": "No user by that username."});
+        } else {
+            bcrypt.compare(request.body.password, res.rows[0].password, (err, res) => {
+                if (res) {
+                    token = jwt.sign({
+                        "user": request.body.username
+                    }, config.secretKey, { expiresIn: '3h' });
+                    response.status(200).json({"token": token});
+                } else {
+                    response.status(400).json({"err": "Invalid password"});
+                }
+            });
+        }
     });
 });
 
