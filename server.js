@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = 3000;
+const config = require('./config');
 
 const users = require('./endpoints/users');
 
@@ -11,6 +13,20 @@ app.use(
         extended: true,
     })
 );
+
+/*
+ * JWT authorization middleware
+ *
+ * If the JWT is present in the headers, this middleware will decode the JWT
+ * and set req.user accordingly
+ */
+app.use((req, res, next) => {
+    token = req.get("authorization");
+    jwt.verify(token, config.secretKey, function(err, decoded) {
+        if (decoded) {req.user = decoded.user};
+    });
+    next();
+});
 
 verbose = true;
 
@@ -32,6 +48,8 @@ app.map = (a, route) => {
     }
 };
 
+
+// url map
 app.map({
     '/users': users
 });
