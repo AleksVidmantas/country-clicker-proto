@@ -13,10 +13,15 @@ const insertUser = (username, encryptedPass, callback) => {
 };
 
 const getUser = (username, callback) => {
-    pool.query("SELECT * FROM users WHERE username=$1", [username], callback)
+    pool.query("SELECT * FROM users WHERE username=$1", [username], callback);
 };
+
+const deleteUser = (username, callback) => {
+    pool.query("DELETE FROM users WHERE username=$1", [username], callback);
+}
 
 module.exports = {
     insertUser,
-    getUser
+    getUser,
+    deleteUser
 };
