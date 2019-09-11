@@ -11,18 +11,33 @@ create = (request, response) => {
     } else if (request.body.username.length < 5){
         response.status(400).json({"err": "Username must be 5 or more characters."}).end();
     } else {
-        bcrypt.hash(request.body.password, 10, function(err, hash) {
-            if (err) {
-                response.status(500).end();
-            }
-            db.insertUser(request.body.username, hash, (err, res) => {
-                if (err && err.code == '23505') {
-                    response.status(400).json({"err": "Username has already been taken"});
-                } else {
-                    response.status(201).json(res.rows[0]);//changes
+
+        let lengthPassed = (request.body.password.length >= 7); 
+        let containsCap = /[A-Z]/.test(request.body.password);
+        let containsNum = /\d/.test(request.body.password);
+        let containsSymbol = /\W/.test(request.body.password);
+        if (!lengthPassed || !containsCap || !containsNum || !containsSymbol) {
+            let error = {"err" : ""};
+            error.err += (lengthPassed ? "" : "Password must be 7 or more characters. ");
+            error.err += (containsCap ? "" : "Passoword must contain a capital. ");
+            error.err += (containsNum ? "" : "Password must contain a number. ");
+            error.err += (containsSymbol ? "" : "Passoword must contain a symbol. ");
+            response.status(400).json(error).end();
+        } else {
+        
+            bcrypt.hash(request.body.password, 10, function(err, hash) {
+                if (err) {
+                    response.status(500).end();
                 }
+                db.insertUser(request.body.username, hash, (err, res) => {
+                    if (err && err.code == '23505') {
+                        response.status(400).json({"err": "Username has already been taken"});
+                    } else {
+                    response.status(201).json(res.rows[0]);//changes
+                    }
+                });
             });
-        });
+        }
     }
 };
 
