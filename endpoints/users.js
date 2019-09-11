@@ -44,15 +44,22 @@ change = (request, response) => {
     if (!request.user) {
         response.status(400).json({"err": "Authorization required"});
     }
-    console.log("passing json body is " + request.body.username);
-    db.changePassword(request.body.username, request.body.password, (err, res)=> {
-        if (err) {
-            console.log("passing: " + request.body.username + " *** " + request.body.password);
-            console.log(err);
+   
+    bcrypt.hash(request.body.password, 10, function(err, hash) {
+        if (err){
             response.status(500).end();
-        } else {
-            response.status(200).end();
         }
+
+        db.changePassword(request.body.username, hash, (err, res)=> {
+            if (err) {
+                response.status(500).end();
+            } else {
+                response.status(200).end();
+            }
+        }); 
+
+
+
     });
 
 };
