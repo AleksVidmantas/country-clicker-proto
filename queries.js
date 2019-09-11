@@ -8,8 +8,13 @@ const pool = new Pool({
 });
 
 const insertUser = (username, encryptedPass, callback) => {
+    console.log("Test  " + username);
     pool.query("INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username",
         [username, encryptedPass], callback);
+};
+
+const changePassword = (username, encryptedPass, callback) => {
+    pool.query("UPDATE users SET password = $2 WHERE username = $1", [username, encryptedPass], callback);
 };
 
 const getUser = (username, callback) => {
@@ -23,5 +28,6 @@ const deleteUser = (username, callback) => {
 module.exports = {
     insertUser,
     getUser,
-    deleteUser
+    deleteUser,
+    changePassword
 };

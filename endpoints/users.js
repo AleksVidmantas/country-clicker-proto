@@ -19,7 +19,7 @@ create = (request, response) => {
             if (err && err.code == '23505') {
                 response.status(400).json({"err": "Username has already been taken"});
             } else {
-                response.status(201).json(res.rows[0]);
+                response.status(201).json(res.rows[0]);//changes
             }
         });
     });
@@ -38,6 +38,25 @@ del = (request, response) => {
         }
     });
 }
+
+change = (request, response) => {
+ 
+    if (!request.user) {
+        response.status(400).json({"err": "Authorization required"});
+    }
+    console.log("passing json body is " + request.body.username);
+    db.changePassword(request.body.username, request.body.password, (err, res)=> {
+        if (err) {
+            console.log("passing: " + request.body.username + " *** " + request.body.password);
+            console.log(err);
+            response.status(500).end();
+        } else {
+            response.status(200).end();
+        }
+    });
+
+};
+
 
 auth = (request, response) => {
     db.getUser(request.body.username, (err, res) => {
@@ -60,10 +79,15 @@ auth = (request, response) => {
     });
 };
 
+
+
 module.exports = {
     post: create,
     delete: del,
     '/auth': {
         post: auth
+    },
+    '/change': {
+        post: change
     }
-}
+};
