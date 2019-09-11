@@ -25,9 +25,14 @@ const deleteUser = (username, callback) => {
     pool.query("DELETE FROM users WHERE username=$1", [username], callback);
 }
 
+const getStats = (id, callback) => {
+    pool.query("SELECT * FROM user_performance WHERE id = $1", [id], callback);
+}
+
 module.exports = {
     insertUser,
     getUser,
     deleteUser,
-    changePassword
+    changePassword,
+    getStats
 };

@@ -40,7 +40,6 @@ del = (request, response) => {
 }
 
 change = (request, response) => {
- 
     if (!request.user) {
         response.status(400).json({"err": "Authorization required"});
     }
@@ -61,9 +60,7 @@ change = (request, response) => {
 
 
     });
-
 };
-
 
 auth = (request, response) => {
     db.getUser(request.body.username, (err, res) => {
@@ -86,7 +83,17 @@ auth = (request, response) => {
     });
 };
 
-
+stats = (request, response) => {
+    db.getStats(request.params.uid, (err, res) => {
+        if (err) {
+            response.status(500).end();
+        } else if (!res.rows.length) {
+            response.status(400).json({"err": "No user by that id."});
+        } else {
+            response.status(200).json(res.rows[0]);
+        }
+    });
+}
 
 module.exports = {
     post: create,
@@ -96,5 +103,10 @@ module.exports = {
     },
     '/change': {
         post: change
+    },
+    '/:uid': {
+        "/stats": {
+            get: stats
+        }
     }
 };
