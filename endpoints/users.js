@@ -5,24 +5,25 @@ const config = require('../config');
 
 create = (request, response) => {
     if (!request.body.username) {
-        response.status(400).json({"err": "Missing username field."});
-    }
-    if (!request.body.password) {
-        response.status(400).json({"err": "Missing password field."});
-    }
-
-    bcrypt.hash(request.body.password, 10, function(err, hash) {
-        if (err) {
-            response.status(500).end();
-        }
-        db.insertUser(request.body.username, hash, (err, res) => {
-            if (err && err.code == '23505') {
-                response.status(400).json({"err": "Username has already been taken"});
-            } else {
-                response.status(201).json(res.rows[0]);//changes
+        response.status(400).json({"err": "Missing username field."}).end();
+    } else if (!request.body.password) {
+        response.status(400).json({"err": "Missing password field."}).end();
+    } else if (request.body.username.length < 5){
+        response.status(400).json({"err": "Username must be 5 or more characters."}).end();
+    } else {
+        bcrypt.hash(request.body.password, 10, function(err, hash) {
+            if (err) {
+                response.status(500).end();
             }
+            db.insertUser(request.body.username, hash, (err, res) => {
+                if (err && err.code == '23505') {
+                    response.status(400).json({"err": "Username has already been taken"});
+                } else {
+                    response.status(201).json(res.rows[0]);//changes
+                }
+            });
         });
-    });
+    }
 };
 
 del = (request, response) => {
