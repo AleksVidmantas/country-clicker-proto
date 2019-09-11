@@ -30,5 +30,5 @@ configuration value, and that is `secretKey`, which is simply a key that is used
 1. https://blog.logrocket.com/setting-up-a-restful-api-with-node-js-and-postgresql-d96d6fc892d8/
 2. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04
 3. http://www.postgresqltutorial.com/postgresql-cheat-sheet/
- 
+4. For testing https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo?hl=en-US
 
