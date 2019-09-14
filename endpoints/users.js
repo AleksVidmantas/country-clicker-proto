@@ -83,7 +83,7 @@ auth = (request, response) => {
                 if (res) {
                     token = jwt.sign({
                         "user": request.body.username
-                    }, config.secretKey, { expiresIn: '3h' });
+                    }, config.secretKey, { expiresIn: config.jwtExpiration });
                     response.status(200).json({"token": token});
                 } else {
                     response.status(400).json({"err": "Invalid password"});
