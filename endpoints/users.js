@@ -2,44 +2,38 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../queries');
 const config = require('../config');
+const { check, validationResult } = require('express-validator');
 
-create = (request, response) => {
-    if (!request.body.username) {
-        response.status(400).json({"err": "Missing username field."}).end();
-    } else if (!request.body.password) {
-        response.status(400).json({"err": "Missing password field."}).end();
-    } else if (request.body.username.length < 5){
-        response.status(400).json({"err": "Username must be 5 or more characters."}).end();
-    } else {
+create = [
+    check("username")
+    .isLength({ min: 5, max: 30 }).withMessage("Length must be between 5 and 30"),
 
-        let lengthPassed = (request.body.password.length >= 7); 
-        let containsCap = /[A-Z]/.test(request.body.password);
-        let containsNum = /\d/.test(request.body.password);
-        let containsSymbol = /\W/.test(request.body.password);
-        if (!lengthPassed || !containsCap || !containsNum || !containsSymbol) {
-            let error = {"err" : ""};
-            error.err += (lengthPassed ? "" : "Password must be 7 or more characters. ");
-            error.err += (containsCap ? "" : "Passoword must contain a capital. ");
-            error.err += (containsNum ? "" : "Password must contain a number. ");
-            error.err += (containsSymbol ? "" : "Passoword must contain a symbol. ");
-            response.status(400).json(error).end();
-        } else {
-        
-            bcrypt.hash(request.body.password, 10, function(err, hash) {
-                if (err) {
-                    response.status(500).end();
-                }
-                db.insertUser(request.body.username, hash, (err, res) => {
-                    if (err && err.code == '23505') {
-                        response.status(400).json({"err": "Username has already been taken"});
-                    } else {
-                    response.status(201).json(res.rows[0]);//changes
-                    }
-                });
-            });
+    check("password")
+    .isLength({ min: 10, max: 100 }).withMessage("Length must be between 10 and 100")
+    .matches(/\d/).withMessage("Must contain a digit")
+    .matches(/[$-/:-?{-~!"^_`\[\]]/).withMessage("Must contain a symbol")
+    .not().isLowercase().withMessage("Must contain an uppercase letter"),
+
+    (request, response) => {
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+            return response.status(422).json({ errors: errors.array() });
         }
+
+        bcrypt.hash(request.body.password, 10, function(err, hash) {
+            if (err) {
+                response.status(500).end();
+            }
+            db.insertUser(request.body.username, hash, (err, res) => {
+                if (err && err.code == '23505') {
+                    response.status(400).json({"err": "Username has already been taken"});
+                } else {
+                    response.status(201).json(res.rows[0]);
+                }
+            });
+        });
     }
-};
+];
 
 del = (request, response) => {
     if (!request.user) {
