@@ -2,28 +2,38 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../queries');
 const config = require('../config');
+const { check, validationResult } = require('express-validator');
 
-create = (request, response) => {
-    if (!request.body.username) {
-        response.status(400).json({"err": "Missing username field."});
-    }
-    if (!request.body.password) {
-        response.status(400).json({"err": "Missing password field."});
-    }
+create = [
+    check("username")
+    .isLength({ min: 5, max: 30 }).withMessage("Length must be between 5 and 30"),
 
-    bcrypt.hash(request.body.password, 10, function(err, hash) {
-        if (err) {
-            response.status(500).end();
+    check("password")
+    .isLength({ min: 10, max: 100 }).withMessage("Length must be between 10 and 100")
+    .matches(/\d/).withMessage("Must contain a digit")
+    .matches(/[$-/:-?{-~!"^_`\[\]]/).withMessage("Must contain a symbol")
+    .not().isLowercase().withMessage("Must contain an uppercase letter"),
+
+    (request, response) => {
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+            return response.status(422).json({ errors: errors.array() });
         }
-        db.insertUser(request.body.username, hash, (err, res) => {
-            if (err && err.code == '23505') {
-                response.status(400).json({"err": "Username has already been taken"});
-            } else {
-                response.status(201).json(res.rows[0]);//changes
+
+        bcrypt.hash(request.body.password, 10, function(err, hash) {
+            if (err) {
+                response.status(500).end();
             }
+            db.insertUser(request.body.username, hash, (err, res) => {
+                if (err && err.code == '23505') {
+                    response.status(400).json({"err": "Username has already been taken"});
+                } else {
+                    response.status(201).json(res.rows[0]);
+                }
+            });
         });
-    });
-};
+    }
+];
 
 del = (request, response) => {
     if (!request.user) {
