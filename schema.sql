@@ -6,11 +6,11 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE regions (id uuid DEFAULT uuid_generate_v4() PRIMARY KEY, 
                       click_count INT DEFAULT 0, 
-                      name VARCHAR(20),
+                      name VARCHAR(50),
                       owning_faction_id uuid);
 
 CREATE TABLE factions (id uuid DEFAULT uuid_generate_v4() PRIMARY KEY, 
-                      name VARCHAR(20));
+                      name VARCHAR(50));
 
 CREATE TABLE users (id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
                     username VARCHAR(30) UNIQUE,

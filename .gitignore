@@ -88,3 +88,6 @@ typings/
 .dynamodb/
 
 config.js
+
+# vim swap files
+*.swp
