@@ -5,7 +5,7 @@
 1. Node - `sudo apt-get install curl`<br />`curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -`<br />`sudo apt-get install nodejs`<br />
 run `node -v` and `npm -v ` to verify installation
 2. postgres - `sudo apt update` and<br />
-`sudo apt install postgresql postgresql-contrib lipq-dev`
+`sudo apt install postgresql postgresql-contrib`
 
 ### Setting up
 1. Clone this repo

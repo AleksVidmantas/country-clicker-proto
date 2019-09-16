@@ -1,7 +1,5 @@
 #!/usr/bin/env/python3
 
-# script needs to be run as user postgres
-
 import shapefile
 import psycopg2 
 from psycopg2.extras import execute_values
@@ -18,7 +16,7 @@ random.seed(randomseed)
 
 
 
-conn = psycopg2.connect("dbname=country_game user=postgres")
+conn = psycopg2.connect("dbname=country_game user=postgres password=aem6443 port=5432 host=localhost")
 cur = conn.cursor()
 
 sf = shapefile.Reader(shp_name)
@@ -36,6 +34,13 @@ reg_fid = {r:fac_fid[reg_fac[r]] for r in reg_fac}
 execute_values(cur, \
    "INSERT INTO regions (owning_faction_id, click_count, name) VALUES %s;", \
    [(reg_fid[r], random.randint(min_rand_score, max_rand_score), r) for r in reg_fid])
+
+conn.commit()
+
+cur.execute("SELECT * from factions;")
+x = cur.fetchall()
+
+print(x)
 
 sf.close()
 cur.close()
