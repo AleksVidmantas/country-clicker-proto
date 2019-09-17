@@ -34,16 +34,11 @@ verbose = true;
 app.map = (a, route) => {
     route = route || '';
     for (var key in a) {
-        switch (typeof a[key]) {
-            // { '/path': { ... }}
-            case 'object':
-                app.map(a[key], route + key);
-                break;
-            // get: function(){ ... }
-            case 'function':
-                if (verbose) console.log('%s %s', key, route);
-                app[key](route, a[key]);
-                break;
+        if (typeof a[key] == "object" && !Array.isArray(a[key])) {
+            app.map(a[key], route + key);
+        } else {
+            if (verbose) console.log('%s %s', key, route);
+            app[key](route, a[key]);
         }
     }
 };
