@@ -26,6 +26,7 @@ configuration value, and that is `secretKey`, which is simply a key that is used
 4. `\d+ table` list table column information
 5. `sudo psql -U postgres` login as user postgres
 6. `\q` to quit
+
 ### References
 1. https://blog.logrocket.com/setting-up-a-restful-api-with-node-js-and-postgresql-d96d6fc892d8/
 2. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04
