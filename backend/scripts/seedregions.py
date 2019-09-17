@@ -9,7 +9,6 @@ import json
 
 faction_field = 'CONTINENT'
 region_field  = 'SOVEREIGNT'
-shp_name = 'ne_10m_admin_0_sovereignty'
 
 randomseed = 1
 max_rand_score = 100
@@ -38,11 +37,6 @@ def seed_regions(sf, auth):
        [(reg_fid[r], random.randint(min_rand_score, max_rand_score), r) for r in reg_fid])
 
     conn.commit()
-
-    cur.execute("SELECT * from factions;")
-    x = cur.fetchall()
-
-    print(x)
 
     sf.close()
     cur.close()
