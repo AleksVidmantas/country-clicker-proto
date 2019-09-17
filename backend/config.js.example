@@ -1,0 +1,6 @@
+const config = {
+    secretKey: "",
+    jwtExpiration: "3h"
+};
+
+module.exports = config;
