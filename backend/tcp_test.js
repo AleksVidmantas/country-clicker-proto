@@ -20,18 +20,18 @@ server.on('connection', function(sock) {
         console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // Write the data back to all the connected, the client will receive it as data from the server
         //sockets.forEach(function(sock, index, array) {
-            let reply = sock.remoteAddress + ':' + sock.remotePort + " said " + data + '\n';
+        /*    let reply = sock.remoteAddress + ':' + sock.remotePort + " said " + data + '\n';
             let header = reply.length;
             
             let buffer = new ArrayBuffer(msgHeaderLengthBytes + reply.length);
-            let headerView = new Int32Array(buffer, 0, 1);
+            let headerView = new DataView(buffer, 0, 4);
             let msgView = new Uint8Array(buffer, 4, reply.length);
 
-            headerView[0] = reply.length;
+            headerView.setInt32(0,reply.length,true); //true for little endian enforcement
             msgView.set(encoder.encode(reply), 0);
 
-            let socketWriteView = new Uint8Array(buffer);
-            sock.write(socketWriteView); 
+            let socketWriteView = new Uint8Array(buffer);*/
+            sock.write(encodeStringMessage("Echo "+data)); 
         //});
     });
 
@@ -43,4 +43,19 @@ server.on('connection', function(sock) {
         if (index !== -1) sockets.splice(index, 1);
         console.log('CLOSED: ' + sock.remoteAddress + ' ' + sock.remotePort);
     });
-});
+}); 
+
+function encodeStringMessage(msg){
+   
+    let header = msg.length;
+
+    let buffer = new ArrayBuffer(msgHeaderLengthBytes + msg.length);
+    let headerView = new DataView(buffer, 0, 4);
+    let msgView = new Uint8Array(buffer, 4, msg.length);
+
+    headerView.setInt32(0, msg.length, true);
+    msgView.set(encoder.encode(msg), 0);
+
+    let socketWriteView = new Uint8Array(buffer);
+    return socketWriteView;
+}
